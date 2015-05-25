@@ -15,19 +15,10 @@ char converte(char c) {
 }
 
 int main() {
-	char num[40], *res = NULL;
-	int i;
-	unsigned long int len;
+	char c;
 
-	while(scanf("%s", num) != EOF) {
-		res = (char *) malloc(40 * sizeof(char));
-		len = strlen(num);
-		for(i = 0; i < len; i++) {
-			res[i] = converte(num[i]);
-		}
-
-		printf("%s\n", res);
-		free(res);
+	while(scanf("%c", &c) != EOF) {
+		printf("%c",converte(c));
 	}
 
 	return 0;
