@@ -5,6 +5,7 @@
 !.gitignore
 !*.c
 !*.cpp
+!*.pdf
 
 # ...even if they are in subdirectories
 !*/
