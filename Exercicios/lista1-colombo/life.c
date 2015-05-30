@@ -1,3 +1,5 @@
+/* Problema: http://spoj.com/problems/TEST/ */
+
 #include <stdio.h>
 
 int main() {

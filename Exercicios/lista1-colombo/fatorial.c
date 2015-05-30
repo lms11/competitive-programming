@@ -1,3 +1,5 @@
+/* Problema: http://br.spoj.com/problems/FATORIA2/ */
+
 #include <stdio.h>
 
 int main() {

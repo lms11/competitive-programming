@@ -1,3 +1,5 @@
+/* Problema: http://br.spoj.com/problems/BIT/ */
+
 #include <stdio.h>
 
 void print_n(int a, int saida) {

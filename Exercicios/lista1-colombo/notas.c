@@ -1,3 +1,5 @@
+/* Problema: http://br.spoj.com/problems/NOTA09/ */
+
 #include <stdio.h>
 
 int main() {

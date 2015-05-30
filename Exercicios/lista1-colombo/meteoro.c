@@ -1,3 +1,5 @@
+/* Problema: http://br.spoj.com/problems/METEORO/ */
+
 #include <stdio.h>
 
 int main() {
