@@ -2,23 +2,23 @@
 
 #include <stdio.h>
 
+int abs(int a) { return a < 0 ? -a : a; }
+
 int main() {
-	int n, max, i, a;
+	int n, i, a;
 	long long int sum;
 
-	while(scanf("%d", &n), n != 0) {
+	scanf("%d", &n);
+
 		sum = max = 0;
 		for(i = 0; i < n; i++) {
 			scanf("%d", &a);
-	
-			if (a > max) max = a;
 
 			sum += a;
 		}
 
-		if (sum % n == 0) printf("%lld\n", max + 1 - (sum/n));
-		else printf("-1\n");
-	}
+		if (sum % n == 0) printf("%lld", max + 1 - (sum/n));
+		else printf("-1");
 
 	return 0;
 }
