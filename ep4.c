@@ -517,8 +517,6 @@ void negativo(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int *valorMax
 			*valorMaximo = max(*valorMaximo, m[i][j]);
 		}
 	}
-
-	
 }
 
 void rebatimentoVertical(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas) {
@@ -573,8 +571,6 @@ void corte(int m[MAXLINHA][MAXCOLUNA], int *linhas, int *colunas, int xsup, int 
 
 	*linhas = xinf - xsup + 1;
 	*colunas = yinf - ysup + 1;
-
-	
 }
 
 void filtroMediana(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int *valorMaximo) {
