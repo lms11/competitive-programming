@@ -60,7 +60,7 @@ int main() {
 	char menu;
 	char nome_arquivo[MAX_NAME], c_nome_arquivo[MAX_NAME];
 	char complemento[MAX_NAME];
-	int a, b, c, d, t = 0, index_char_null, chave_hifen = 0;
+	int a, b, c, d, t = 0, index_char;
 
 	printf("Digite o nome do arquivo de entrada: \n");
 	scanf("%s", nome_arquivo);
@@ -84,7 +84,6 @@ int main() {
 
 			if (le_pgm(nome_arquivo, m, &linhas, &colunas, &maiorValor) == 1) {
 				t = 0;
-				chave_hifen = 0;
 
 				printf("Arquivo %s.pgm carregado com sucesso.\n", nome_arquivo);
 
@@ -254,20 +253,16 @@ int main() {
 
 
 		} else if (menu == 'g') {
-			// strcat(nome_arquivo, "-");
-			// strcat(nome_arquivo, complemento);
-
-			for(index_char_null = 0; nome_arquivo[index_char_null] != 0; index_char_null++);
-
-			if (chave_hifen == 0) {
-				nome_arquivo[index_char_null++] = '-';
-				chave_hifen = 1;
+			for(index_char = 0; nome_arquivo[index_char] != 0; index_char++) {
+				c_nome_arquivo[index_char] = nome_arquivo[index_char];
 			}
 
-			for(a = 0; a < t; a++)
-				nome_arquivo[a + index_char_null] = complemento[a];
+			c_nome_arquivo[index_char++] = '-';
 
-			grava_pgm(nome_arquivo, m, linhas, colunas, maiorValor);
+			for(a = 0; a < t; a++)
+				c_nome_arquivo[a + index_char] = complemento[a];
+
+			grava_pgm(c_nome_arquivo, m, linhas, colunas, maiorValor);
 			printf("Operacao realizada com sucesso.\n");
 
 
