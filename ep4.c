@@ -17,16 +17,6 @@
 
 
 /*
-	Structs
-*/
-
-typedef struct {
-	int i, j; /* Guarda a posição original antes da ordenação do array */
-	int valor;
-} Objeto;
-
-
-/*
 	===== ===== ===== ===== =====
 	Protótipos
 */
@@ -55,9 +45,8 @@ int min(int a, int b);
 int max(int a, int b);
 void copia_matriz(int de[MAXLINHA][MAXCOLUNA], int para[MAXLINHA][MAXCOLUNA], int linhas, int colunas);
 void subtracao_matriz(int m[MAXLINHA][MAXCOLUNA], int a[MAXLINHA][MAXCOLUNA], int linhas, int colunas);
-void atualiza_valor_maximo_matriz(int de[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int *valorMaximo);
-void merge(Objeto v[], int esquerda, int meio, int direita);
-void mergesort(Objeto v[], int esquerda, int direita);
+void merge(int v[], int esquerda, int meio, int direita);
+void mergesort(int v[], int esquerda, int direita);
 
 
 /*
@@ -71,7 +60,7 @@ int main() {
 	char menu;
 	char nome_arquivo[MAX_NAME], c_nome_arquivo[MAX_NAME];
 	char complemento[MAX_NAME];
-	int a, b, c, d, t = 0;
+	int a, b, c, d, t = 0, index_char_null, chave_hifen = 0;
 
 	printf("Digite o nome do arquivo de entrada: \n");
 	scanf("%s", nome_arquivo);
@@ -94,9 +83,8 @@ int main() {
 			scanf("%s", nome_arquivo);
 
 			if (le_pgm(nome_arquivo, m, &linhas, &colunas, &maiorValor) == 1) {
-				for(a = 0; a < t; a++)
-					complemento[a] = 0;
 				t = 0;
+				chave_hifen = 0;
 
 				printf("Arquivo %s.pgm carregado com sucesso.\n", nome_arquivo);
 
@@ -118,7 +106,6 @@ int main() {
 
 		} else if (menu == 'r') {
 			rotacao(m, &linhas, &colunas);
-			rebatimentoHorizontal(m, linhas, colunas);
 			complemento[t++] = 'r';
 			printf("Operacao realizada com sucesso.\n");
 
@@ -156,6 +143,12 @@ int main() {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
 
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
+
 			filtroErosao(m, linhas, colunas, a, &maiorValor);
 			complemento[t++] = 'e';
 			printf("Operacao realizada com sucesso.\n");
@@ -164,6 +157,12 @@ int main() {
 		} else if (menu == 'd') {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
+
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
 
 			filtroDilatacao(m, linhas, colunas, a, &maiorValor);
 			complemento[t++] = 'd';
@@ -174,6 +173,12 @@ int main() {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
 
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
+
 			filtroMediana(m, linhas, colunas, a, &maiorValor);
 			complemento[t++] = 'm';
 			printf("Operacao realizada com sucesso.\n");
@@ -183,6 +188,12 @@ int main() {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
 
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
+
 			filtroMedia(m, linhas, colunas, a, &maiorValor);
 			complemento[t++] = 'z';
 			printf("Operacao realizada com sucesso.\n");
@@ -191,6 +202,12 @@ int main() {
 		} else if (menu == '1') {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
+
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
 
 			printf("Informe o valor de k: ");
 			scanf("%d", &b);
@@ -204,6 +221,12 @@ int main() {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
 
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
+
 			printf("Informe o valor de k: ");
 			scanf("%d", &b);
 
@@ -216,6 +239,12 @@ int main() {
 			printf("Digite o tamanho da janela: ");
 			scanf("%d", &a);
 
+			while(a < 3 || a > 50) {
+                printf("Tamanho invalido. A janela deve ser entre 3 e 50.\n");
+                printf("Digite o tamanho da janela: ");
+                scanf("%d", &a);
+            }
+
 			printf("Informe o valor de k: ");
 			scanf("%d", &b);
 
@@ -225,8 +254,18 @@ int main() {
 
 
 		} else if (menu == 'g') {
-			strcat(nome_arquivo, "-");
-			strcat(nome_arquivo, complemento);
+			// strcat(nome_arquivo, "-");
+			// strcat(nome_arquivo, complemento);
+
+			for(index_char_null = 0; nome_arquivo[index_char_null] != 0; index_char_null++);
+
+			if (chave_hifen == 0) {
+				nome_arquivo[index_char_null++] = '-';
+				chave_hifen = 1;
+			}
+
+			for(a = 0; a < t; a++)
+				nome_arquivo[a + index_char_null] = complemento[a];
 
 			grava_pgm(nome_arquivo, m, linhas, colunas, maiorValor);
 			printf("Operacao realizada com sucesso.\n");
@@ -264,7 +303,6 @@ int main() {
 			}
 
 			
-
 		}
 
 		printf("Digite um comando: ");
@@ -444,8 +482,8 @@ void subtracao_matriz(int m[MAXLINHA][MAXCOLUNA], int a[MAXLINHA][MAXCOLUNA], in
 	Algoritmo de Robert Sedgewick, Algorithms in C, 3rd. ed., vol. 1, Addison Wesley Longman, 1998.
 	http://www.ime.usp.br/~pf/algoritmos/aulas/mrgsrt.html
 */
-void merge(Objeto v[], int esquerda, int meio, int direita) {
-	Objeto aux[MAXLINHA * MAXCOLUNA];
+void merge(int v[], int esquerda, int meio, int direita) {
+	int aux[MAXLINHA * MAXCOLUNA];
 	int i, j, k;
 
 	for (i = 0, k = esquerda; k < meio; k++, i++) aux[i] = v[k];
@@ -455,7 +493,7 @@ void merge(Objeto v[], int esquerda, int meio, int direita) {
 	j = direita - esquerda - 1;
 
 	for(k = esquerda; k < direita; k++) {
-		if (aux[i].valor <= aux[j].valor) v[k] = aux[i++];
+		if (aux[i] <= aux[j]) v[k] = aux[i++];
 		else v[k] = aux[j--];
 	}
 }
@@ -465,7 +503,7 @@ void merge(Objeto v[], int esquerda, int meio, int direita) {
 	enquanto a sentença (esquerda < direita) for verdadeira
 	Retorna um array V ordenado não-decrescente
 */
-void mergesort(Objeto v[], int esquerda, int direita) {
+void mergesort(int v[], int esquerda, int direita) {
 	int meio;
 	if (esquerda < direita - 1) {
 		meio = (esquerda + direita) / 2;
@@ -475,7 +513,6 @@ void mergesort(Objeto v[], int esquerda, int direita) {
 	}
 }
 
-/* OK */
 void negativo(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int *valorMaximo) {
 	int i, j;
 	*valorMaximo = -1;
@@ -489,31 +526,24 @@ void negativo(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int *valorMax
 	
 }
 
-/* OK */
 void rebatimentoVertical(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas) {
-	int i, j;
-	for (i = 0; i < (linhas / 2); i++) {
-		for (j = 0; j < colunas; j++) {
-			swap(&m[linhas - 1 - i][j], &m[i][j]);
-		}
-	}
-
-	
-}
-
-/* OK */
-void rebatimentoHorizontal(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas) {
 	int i, j;
 	for (i = 0; i < linhas; i++) {
 		for (j = 0; j < (colunas / 2); j++) {
 			swap(&m[i][colunas - 1 - j], &m[i][j]);
 		}
 	}
-
-	
 }
 
-/* OK */
+void rebatimentoHorizontal(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas) {
+	int i, j;
+	for (i = 0; i < (linhas / 2); i++) {
+		for (j = 0; j < colunas; j++) {
+			swap(&m[linhas - 1 - i][j], &m[i][j]);
+		}
+	}
+}
+
 void rotacao(int m[MAXLINHA][MAXCOLUNA], int *linhas, int *colunas) {
 	/* Calcula a transposta da matriz */
 	int max, i, j, tmp;
@@ -526,13 +556,10 @@ void rotacao(int m[MAXLINHA][MAXCOLUNA], int *linhas, int *colunas) {
 			swap(&m[i][j], &m[j][i]);
 		}
 	}
-
 	swap(linhas, colunas);
-
-	
+	rebatimentoVertical(m, *linhas, *colunas);
 }
 
-/* OK */
 void corte(int m[MAXLINHA][MAXCOLUNA], int *linhas, int *colunas, int xsup, int ysup, int xinf, int yinf, int *valorMaximo) {
 	int i, j;
 
@@ -556,144 +583,127 @@ void corte(int m[MAXLINHA][MAXCOLUNA], int *linhas, int *colunas, int xsup, int 
 }
 
 void filtroMediana(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int *valorMaximo) {
-	Objeto v_array[MAXLINHA * MAXCOLUNA];
-	int i, j, a, b;
-	int offset = (larguraJanela - 1) / 2;
+	int v_array[MAXLINHA * MAXCOLUNA];
+	int m_copy[MAXLINHA][MAXCOLUNA];	// Vai armazenar a matriz original. A original armazenará o resultado
+	int i, j, a, b, pos;
 	int xsup, ysup, xinf, yinf;
 	int mediana;
+	int offset = (larguraJanela - 1) / 2;
 
-	for (a = 0; a < linhas; a++) {
-		for (b = 0; b < colunas; b++) {
-			v_array[a * colunas + b].valor = m[a][b];
-			v_array[a * colunas + b].i = a;
-			v_array[a * colunas + b].j = b;
-		}
-	}
-
-	mergesort(v_array, 0, linhas * colunas);
+	copia_matriz(m, m_copy, linhas, colunas);
 
 	*valorMaximo = -1;
 	for (i = 0; i < linhas; i++) {
 		for (j = 0; j < colunas; j++) {
-			xsup = min(0, j - offset);
-			ysup = min(0, i - offset);
+			xsup = max(0, j - offset);
+			ysup = max(0, i - offset);
 			xinf = min(colunas - 1, j + offset);
 			yinf = min(linhas - 1, i + offset);
-			offset = (xinf - xsup + 1) * (yinf - ysup + 1) / 2;
+			pos = 0;
 
 			/* Procuro a mediana no meu vetor ordenado. */
-			for(a = b = 0; a < offset; b++) {
-				printf("Bora verificar no %d: %d | %d %d\n", b, v_array[b].valor, v_array[b].i, v_array[b].j);
-				if (v_array[b].i >= xsup && v_array[b].i <= xinf &&
-					v_array[b].j >= ysup && v_array[b].j <= yinf) {
-					printf("Achei %d já! (preciso de %d)\n", a+1, offset);
-					a++;
+			for(a = ysup; a <= yinf; a++) {
+				for(b = xsup; b <= xinf; b++) {
+					v_array[pos++] = m_copy[a][b];
 				}
 			}
 
-			m[i][j] = v_array[b].valor;
-			*valorMaximo = max(*valorMaximo, v_array[b].valor);
+			mergesort(v_array, 0, pos);
+
+			m[i][j] = v_array[pos/2];
+			*valorMaximo = max(*valorMaximo, m[i][j]);
 		}
 	}
 }
 
 void filtroMedia(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int *valorMaximo) {
-	int resultado[MAXLINHA][MAXCOLUNA];
-	int v_length, i, j, a, b, soma;
-	int offset = (larguraJanela - 1) / 2;
+	int v_array[MAXLINHA * MAXCOLUNA], m_copy[MAXLINHA][MAXCOLUNA];
+	int i, j, a, b, sum;
 	int xsup, ysup, xinf, yinf;
 	int mediana;
+	int offset = (larguraJanela - 1) / 2;
+
+	copia_matriz(m, m_copy, linhas, colunas);
 
 	*valorMaximo = -1;
 	for (i = 0; i < linhas; i++) {
 		for (j = 0; j < colunas; j++) {
-			xsup = min(0, j - offset);
-			ysup = min(0, i - offset);
+			xsup = max(0, j - offset);
+			ysup = max(0, i - offset);
 			xinf = min(colunas - 1, j + offset);
 			yinf = min(linhas - 1, i + offset);
-			v_length = (xinf - xsup + 1) * (yinf - ysup + 1);
+			sum = 0;
 
-			soma = 0;
-			for (a = ysup; a <= yinf; a++) {
-				for (b = xsup; b <= xinf; b++) {
-					soma += m[a][b];
+			for(a = ysup; a <= yinf; a++) {
+				for(b = xsup; b <= xinf; b++) {
+					sum += m_copy[a][b];
 				}
 			}
 
-			resultado[i][j] = soma / v_length;
-			*valorMaximo = max(*valorMaximo, resultado[i][j]);
+			m[i][j] = sum / ((xinf - xsup + 1) * (yinf - ysup + 1));
+			*valorMaximo = max(*valorMaximo, m[i][j]);
 		}
 	}
-
-	copia_matriz(resultado, m, linhas, colunas);
-
-	
 }
 
 void filtroErosao(int m[MAXLINHA][MAXCOLUNA], int linhas,int colunas, int larguraJanela, int *valorMaximo) {
-	int resultado[MAXLINHA][MAXCOLUNA];
-	int v_length, i, j, a, b, min_valor;
-	int offset = (larguraJanela - 1) / 2;
+	int v_array[MAXLINHA * MAXCOLUNA], m_copy[MAXLINHA][MAXCOLUNA];
+	int i, j, a, b, min_value;
 	int xsup, ysup, xinf, yinf;
 	int mediana;
+	int offset = (larguraJanela - 1) / 2;
+
+	copia_matriz(m, m_copy, linhas, colunas);
 
 	*valorMaximo = -1;
 	for (i = 0; i < linhas; i++) {
 		for (j = 0; j < colunas; j++) {
-			xsup = min(0, j - offset);
-			ysup = min(0, i - offset);
+			xsup = max(0, j - offset);
+			ysup = max(0, i - offset);
 			xinf = min(colunas - 1, j + offset);
 			yinf = min(linhas - 1, i + offset);
-			v_length = (xinf - xsup + 1) * (yinf - ysup + 1);
+			min_value = 256;
 
-			min_valor = m[ysup][xsup];
-			for (a = ysup; a <= yinf; a++) {
-				for (b = xsup; b <= xinf; b++) {
-					min_valor = min(min_valor, m[a][b]);
+			for(a = ysup; a <= yinf; a++) {
+				for(b = xsup; b <= xinf; b++) {
+					min_value = min(min_value, m_copy[a][b]);
 				}
 			}
 
-			resultado[i][j] = min_valor;
-			*valorMaximo = max(*valorMaximo, resultado[i][j]);
+			m[i][j] = min_value;
+			*valorMaximo = max(*valorMaximo, m[i][j]);
 		}
 	}
-
-	copia_matriz(resultado, m, linhas, colunas);
-
-	
 }
 
 void filtroDilatacao(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int *valorMaximo) {
-	int resultado[MAXLINHA][MAXCOLUNA];
-	int v_length, i, j, a, b, max_valor;
-	int offset = (larguraJanela - 1) / 2;
+	int v_array[MAXLINHA * MAXCOLUNA], m_copy[MAXLINHA][MAXCOLUNA];
+	int i, j, a, b, max_value;
 	int xsup, ysup, xinf, yinf;
 	int mediana;
+	int offset = (larguraJanela - 1) / 2;
+
+	copia_matriz(m, m_copy, linhas, colunas);
 
 	*valorMaximo = -1;
 	for (i = 0; i < linhas; i++) {
 		for (j = 0; j < colunas; j++) {
-			xsup = min(0, j - offset);
-			ysup = min(0, i - offset);
+			xsup = max(0, j - offset);
+			ysup = max(0, i - offset);
 			xinf = min(colunas - 1, j + offset);
 			yinf = min(linhas - 1, i + offset);
-			v_length = (xinf - xsup + 1) * (yinf - ysup + 1);
+			max_value = -1;
 
-			max_valor = m[ysup][xsup];
-			for (a = ysup; a <= yinf; a++) {
-				for (b = xsup; b <= xinf; b++) {
-					max_valor = max(max_valor, m[a][b]);
+			for(a = ysup; a <= yinf; a++) {
+				for(b = xsup; b <= xinf; b++) {
+					max_value = max(max_value, m_copy[a][b]);
 				}
 			}
 
-			resultado[i][j] = max_valor;
-			*valorMaximo = max(*valorMaximo, resultado[i][j]);
+			m[i][j] = max_value;
+			*valorMaximo = max(*valorMaximo, m[i][j]);
 		}
 	}
-
-	copia_matriz(resultado, m, linhas, colunas);
-
-	
 }
 
 void limiarizacao(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int k, int *valorMaximo) {
@@ -717,19 +727,15 @@ void filtroBorda1(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int largu
 	filtroErosao(aux, linhas, colunas, larguraJanela, valorMaximo);
 	subtracao_matriz(m, aux, linhas, colunas);
 	limiarizacao(m, linhas, colunas, k, valorMaximo);
-
-	
 }
 
 void filtroBorda2(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int k, int *valorMaximo) {
 	int aux[MAXLINHA][MAXCOLUNA];
 
 	copia_matriz(m, aux, linhas, colunas);
-	filtroDilatacao(m, linhas, colunas, larguraJanela, valorMaximo);
+	filtroErosao(aux, linhas, colunas, larguraJanela, valorMaximo);
 	subtracao_matriz(m, aux, linhas, colunas);
 	limiarizacao(m, linhas, colunas, k, valorMaximo);
-
-	
 }
 
 void filtroBorda3(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int larguraJanela, int k, int *valorMaximo) {
@@ -737,9 +743,6 @@ void filtroBorda3(int m[MAXLINHA][MAXCOLUNA], int linhas, int colunas, int largu
 
 	copia_matriz(m, aux, linhas, colunas);
 	filtroDilatacao(m, linhas, colunas, larguraJanela, valorMaximo);
-	filtroErosao(aux, linhas, colunas, larguraJanela, valorMaximo);
 	subtracao_matriz(m, aux, linhas, colunas);
 	limiarizacao(m, linhas, colunas, k, valorMaximo);
-
-	
 }
