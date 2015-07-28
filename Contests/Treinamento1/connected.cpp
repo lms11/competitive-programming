@@ -2,23 +2,35 @@
 
 #include <cstdio>
 #include <vector>
-#include <algorithm>
+#include <set>
 using namespace std;
 
 #define MAX 500
 
-bool comp(int i, int j) { return (i > j); }
+void printset(set <int> myset) {
+	set<int>::iterator it;
+	for(it = myset.begin(); it != myset.end(); it++) {
+		printf("%c,", *it);
+	}
+	printf("\n");
+}
 
-void dfs(vector<int> graph[], int visited[], int node) {
+set<int> dfs(vector<int> graph[], int visited[], int node) {
+	set <int> response;
 	visited[node] = 1;
-	sort(graph[node].begin(), graph[node].end(), comp);
 
-	printf("%c,", (char)node);
+	response.insert(node);
 
 	while(graph[node].empty() == false) {
-		if (visited[graph[node].back()] == 0) dfs(graph, visited, graph[node].back());
+		if (visited[graph[node].back()] == 0) {
+			set<int> rec_response = dfs(graph, visited, graph[node].back());
+			response.insert(rec_response.begin(), rec_response.end());
+		}
+
 		graph[node].pop_back();
 	}
+
+	return response;
 }
 
 int main() {
@@ -46,8 +58,8 @@ int main() {
 		for (c = (int)'a', d = 0; c < ((int)'a' + n); c++) {
 			if (visited[c] == 0) {
 				d++;
-				dfs(graph, visited, c);
-				printf("\n");
+				set<int> response = dfs(graph, visited, c);
+				printset(response);
 			}
 		}
 
