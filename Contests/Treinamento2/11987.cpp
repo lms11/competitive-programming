@@ -1,135 +1,77 @@
 #include <cstdio>
-#include <vector>
 using namespace std;
 
-int n, m, a, b, c;
-int id[100010];
-vector<int> sets[100010];
+#define OFFSET	100001
+#define MAX 	2 * OFFSET + 10
 
-void unify(int a, int b);
-int find(int a);
-void insert(int a, int b);
-int size(int a);
-long long int sum(int a);
+int n, m, a, b, c;
+int id[MAX], size[MAX];
+long long int sum[MAX];
 
 void debug() {
-	int x;
-	vector<int>::iterator it;
-
-	printf("Index:");
-	for (x = 1; x <= n; x++) printf(" %d", x);
-	printf("\nRoot: ");
-	for (x = 1; x <= n; x++) printf(" %d", id[x]);
-
-	for (x = 1; x <= n; x++) {
-		printf("\n[%d] =>", x);
-
-		for (it = sets[x].begin(); it != sets[x].end(); it++) printf(" %d", *it);
-
-	}
-
+	printf("After command %d (with args: %d %d):\n", a, b, c);
+	
+	for(int x = 1; x <= n; x++) printf("%6d ", x);
 	printf("\n");
-	printf("===== ===== ===== ===== ===== =====\n");
-	printf("===== ===== ===== ===== ===== =====\n\n");
+	for(int x = 1; x <= n; x++) printf("%6d ", id[x]);
+	printf("\n\n");
 }
 
+int find(int a) {
+	if (a < OFFSET) a = id[a] = find(id[a]);
+	return a;
+}
 
-// Union set (a) with set (b)
 void unify(int a, int b) {
 	int root_a = find(a),
 		root_b = find(b);
 
 	if (root_a == root_b) return;
 
-	// Weighted quick-union
-	if (size(root_a) < size(root_b)) {
-		// Since set (a) is smaller than set (b)
-		// Let's insert a into b (advantage here: height of subset (a) is smaller)
-
-		sets[root_b].insert(sets[root_b].end(), sets[root_a].begin(), sets[root_a].end());
-		sets[root_a].clear();
+	if (size[root_a] < size[root_b]) {
 		id[a] = id[root_a] = root_b;
+		size[root_b] += size[root_a];
+		sum[root_b] += sum[root_a];
 
 	} else {
-		// Set (b) is smaller or equal to set (a)
-
-		sets[root_a].insert(sets[root_a].end(), sets[root_b].begin(), sets[root_b].end());
-		sets[root_b].clear();
 		id[b] = id[root_b] = root_a;
+		size[root_a] += size[root_b];
+		sum[root_a] += sum[root_b];
 
-	}	
-}
-
-// Find root of (a)
-int find(int a) {
-	while(a != id[a]) {
-		a = id[a] = id[id[a]]; // Go to root with path compression
 	}
-	return a;
 }
 
-// Insert (a) into set (b)
 void insert(int a, int b) {
 	int root_a = find(a),
-		root_b = find(b),
-		new_father = 0;
-	
-	vector<int>::iterator it;
+		root_b = find(b);
 
 	if (root_a == root_b) return;
 
-	it = sets[root_a].begin();
-	while (*it != a) it++;
-	
-	// Remove a from its original set
-	sets[root_a].erase(it);
-
-	// Insert a into new set
-	sets[root_b].push_back(a);
-
-	// Set new root id
 	id[a] = root_b;
 
+	size[root_a] -= 1;
+	sum[root_a] -= a;
 
-	if (size(a) > 0) {
-		// Send each child of (a) to a different father within the same old set
-		
-		// First lets check if (a) was the head of the tree
-		if (a == root_a) new_father = sets[a].front();
-		else new_father = root_a;
-
-		for (it = sets[a].begin(); it != sets[a].end(); it++) {
-			id[*it] = new_father;
-		}
-
-		sets[new_father].insert(sets[new_father].begin(), sets[a].begin(), sets[a].end());
-		sets[a].clear();
-	}
+	size[root_b] += 1;
+	sum[root_b] += a;
 }
 
-// Size of set (a)
-int size(int a) {
-	return sets[a].size();
+int get_size(int a) {
+	return size[find(a)];
 }
 
-// Sum of set (a)
-long long int sum(int a) {
-	long long int sum = 0;
-	vector<int>::iterator it;
-
-	for (it = sets[a].begin(); it != sets[a].end(); it++) sum += *it;
-
-	return sum;
+long long int get_sum(int a) {
+	return sum[find(a)];
 }
-
 
 int main() {
 	while (scanf("%d %d", &n, &m) != EOF) {
 		// Reset variables
+		id[0] = -1;
 		for (a = 1; a <= n; a++) {
-			id[a] = a;
-			sets[a].clear();
-			sets[a].push_back(a);
+			id[a]   = a + OFFSET;
+			size[a+OFFSET] = 1;
+			sum[a+OFFSET]  = a;
 		}
 
 		while(m--) {
@@ -145,11 +87,10 @@ int main() {
 				scanf("%d", &b);
 
 				b = find(b);
-				printf("%d %lld\n", size(b), sum(b));
-
-//				debug();
-
+				printf("%d %lld\n", get_size(b), get_sum(b));
 			}
+
+//			debug();
 		}
 
 	}
