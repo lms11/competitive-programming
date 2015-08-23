@@ -1,0 +1,11 @@
+# ignore everything
+*
+
+# But not these files...
+!.gitignore
+!*.c
+!*.cpp
+!*.pdf
+
+# ...even if they are in subdirectories
+!*/
