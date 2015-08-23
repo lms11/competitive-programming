@@ -18,7 +18,7 @@ void debug() {
 }
 
 int find(int a) {
-	if (a < OFFSET) a = id[a] = find(id[a]);
+	if (a != id[a]) a = id[a] = find(id[a]);
 	return a;
 }
 
@@ -70,6 +70,7 @@ int main() {
 		id[0] = -1;
 		for (a = 1; a <= n; a++) {
 			id[a]   = a + OFFSET;
+			id[a+OFFSET] = a + OFFSET;
 			size[a+OFFSET] = 1;
 			sum[a+OFFSET]  = a;
 		}
