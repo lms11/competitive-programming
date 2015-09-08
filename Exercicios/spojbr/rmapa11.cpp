@@ -17,7 +17,6 @@ class MinPQ {
 		void print();
 
 	private:
-		int indexOfInsertion(int weight, int a, int b);
 		vector<pair<int, int> > v;
 };
 
