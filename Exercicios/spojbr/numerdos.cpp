@@ -1,113 +1,108 @@
 #include <iostream>
-#include <cstdio>
 #include <map>
-#include <vector>
-#include <queue>
 #include <string>
-#include <cstring>
+#include <queue>
 using namespace std;
 
-#define NODES 1100
+#define NODES 1000
 
 vector<int> graph[NODES];
-map<pair<string, string>, int> mapa;
-pair<string, string> erdos = make_pair(string("Erdos"), string("P."));
 int dist[NODES];
+bool visited[NODES];
 
 void bfs() {
 	queue<int> q;
-	
-	for (int x = 0; x < NODES; x++) dist[x] = 2000000000;
+	q.push(0);
 
 	dist[0] = 0;
-
-	for (int x = 0; x < graph[0].size(); x++) {
-		int u = graph[0][x];
-		dist[u] = 1;
-		q.push(u);
-	}
+	visited[0] = true;
 
 	while(!q.empty()) {
 		int cur = q.front();
 		q.pop();
 
 		for (int x = 0; x < graph[cur].size(); x++) {
-			int u = graph[cur][x];
+			int y = graph[cur][x];
+			
+			if (visited[y]) continue;
 
-			if (dist[u] > dist[cur] + 1) {
-				dist[u] = dist[cur] + 1;
-				q.push(u);
-			}
+			dist[y] = dist[cur] + 1;
+			visited[y] = true;
+			q.push(y);
 		}
-	}
-}
-
-void ans() {
-	for (map<pair<string, string>, int>::iterator it = mapa.begin(); it != mapa.end(); it++) {
-		pair<string, string> name = it->first;
-		int index = it->second;
-
-		if (index == 0) continue;
-
-		cout << name.second << " " << name.first << ": ";
-		
-		if (dist[index] == 2000000000)
-			cout << "infinito";
-		else
-			cout << dist[index];
-
-		cout << endl;
 	}
 }
 
 int main() {
-	int t = 1, n, k = 1;
+	ios::sync_with_stdio(false);
+
+	int n, k, index, x, y, z, i, j, t = 1;
+	char last;
 	string a, b;
+	vector<int> authors;
+	map<pair<string, string>, int> dict;
+	pair<string, string> erdos = make_pair(string("Erdos"), string("P."));
 
-	while(scanf("%d", &n), n != 0) {
-		mapa[erdos] = 0;
+	while(cin >> n, n != 0) {
+		for (x = 0; x < NODES; x++) {
+			graph[x].clear();
+			dist[x] = 2000000000;
+			visited[x] = false;
+		}
 
-		for (int x = 0; x < n; x++) {
-			vector<int> as;
+		k = 1;
+		dict.clear();
+		dict[erdos] = 0;
 
+		for (x = 0; x < n; x++) {
 			while(true) {
 				cin >> a;
 				cin >> b;
 
-				char last = b[b.size()-1];
+				last = b[b.length() - 1];
+				index = 1;
 				b.pop_back();
-				pair<string, string> u = make_pair(b, a);
-				int v;
+				pair<string, string> name = make_pair(b, a);
 
-				if (mapa.count(u) == 0) {
-					v = k++;
-					mapa[u] = v;
+				if (dict.count(name) > 0) {
+					index = dict[name];
 
-				} else v = mapa[u];			
+				} else {
+					dict[name] = index = k++;
+				}
 
-				as.push_back(v);
+				authors.push_back(index);
 
 				if (last == '.') break;
 			}
 
-			for (int i = 0; i < as.size(); i++) {
-				for (int j = 0; j < i; j++) {
-					if (i == j) continue;
+			for (z = 0; z < authors.size(); z++) {
+				i = authors[z];
 
-					graph[as[i]].push_back(as[j]);
-					graph[as[j]].push_back(as[i]);	
+				for (y = 0; y < z; y++) {
+					j = authors[y];
+
+					graph[i].push_back(j);
+					graph[j].push_back(i);
 				}
 			}
+
+			authors.clear();
 		}
 
 		bfs();
-		cout << "Teste " << t++ << endl;
-		ans();
-		cout << endl;
 
-		mapa.clear();
-		for (int x = 0; x < NODES; x++) graph[x].clear();
+		cout << "Teste " << t++ << endl;
+		for (map<pair<string, string>, int>::iterator it = dict.begin(); it != dict.end(); it++) {
+			if (it->second == 0) continue; // erdos himself
+
+			cout << it->first.second << " " << it->first.first << ": ";
+
+			if (dist[it->second] == 2000000000) cout << "infinito" << endl;
+			else cout << dist[it->second] << endl;
+		}
+		cout << endl;
 	}
 
-
+	return 0;
 }
