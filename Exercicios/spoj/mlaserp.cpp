@@ -65,11 +65,12 @@ void printq(queue<tuple<int,int,int> > q) {
 	printf("\n");
 }
 
-int bfs(tuple<int, int, int> from) {
-	int y, x;
+int bfs(tuple<int, int, int> from, tuple<int, int, int> to) {
+	int y, x, y2, x2;
 	queue<tuple<int,int,int> > q;
 
 	tie(y, x, ignore) = from;
+	tie(y2, x2, ignore) = to;
 
 	for(int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
@@ -108,19 +109,19 @@ int bfs(tuple<int, int, int> from) {
 
 	}
 
-	return DIST_MAX;
+	return dist[y2][x2];
 }
 
 int main() {
 	scanf("%d %d", &w, &h);
-	int y, x;
+	int y = -1, x = -1, x2, y2;
 
 	for (int i = 0; i < h; i++) {
 		for (int j = 0; j < w; j++) {
 			scanf(" %c", &(m[i][j]));
 			if (m[i][j] == 'C') {
-				y = i;
-				x = j;
+				if(y == -1) y = i, x = j;
+				else y2 = i, x2 = j;
 			}
 		}
 	}
@@ -134,7 +135,7 @@ int main() {
 	}
 */
 
-	printf("%d\n", bfs(make_tuple(y, x, 0))-1);
+	printf("%d\n", bfs(make_tuple(y, x, 0), make_tuple(y2, x2, 0))-1);
 
 	return 0;
 }
