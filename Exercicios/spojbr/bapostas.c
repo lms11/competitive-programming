@@ -1,42 +1,25 @@
 #include <stdio.h>
 
-int get_sinal(int valor) { return valor < 0 ? 1 : 0; }
-long long int absolute_value(long long int valor) { return valor < 0 ? -valor : valor; }
-
 int main() {
-        int n, c, sinal, casa, i;
-        long long int valores[200000], soma;
+	int soma, cur_soma;
+	int n, aux;
 
-      	 while (scanf("%d", &n) && n != 0) {
-                sinal = casa = -1;
+	while(scanf("%d", &n), n != 0) {
+		soma = -1;
+		cur_soma = 0;
 
-                for(i = 0; i < n; i++) {
-                        scanf("%d", &c);
+		while(n--) {
+			scanf("%d", &aux);
 
-                        if (c == 0) continue;
+			cur_soma += aux;
 
-                        if (casa == -1 || sinal != get_sinal(c)) {
-                                casa++;
-                                valores[casa] = c;
-                                sinal = get_sinal(c);
+			if (cur_soma < 0) cur_soma = 0;
+			else if (cur_soma > soma) soma = cur_soma;
+		}
 
-                        } else valores[casa] += (long long int) c;
-                }
-
-                soma = 0;
-
-                for (i = casa; i >= 0; i--) {
-                        if (valores[i] < 0) continue;
-                        if ((i + 2) <= casa && valores[(i+1)] + valores[(i+2)] > 0)
-                                valores[i] += (valores[(i+1)] + valores[(i+2)]);
-                        if (valores[i] > soma) soma = valores[i];
-
-                        i--;
-                }
-
-		if (soma > 0) printf("The maximum winning streak is %lld.\n", soma);
+		if (soma > 0) printf("The maximum winning streak is %d.\n", soma);
 		else printf("Losing streak.\n");
-        }
+	}
 
-        return 0;
+	return 0;
 }
