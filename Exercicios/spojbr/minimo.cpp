@@ -1,6 +1,8 @@
 #include <cstdio>
 #include <queue>
 #include <vector>
+#include <climits>
+#include <cstring>
 
 #define INF		1000000000
 #define NODES 	106
@@ -13,7 +15,7 @@ void floyd_marshall(int nodes) {
 	for (int k = 0; k < nodes; k++) {
 		for (int i = 0; i < nodes; i++) {
 			for (int j = 0; j < nodes; j++) {
-				dist[i][j][k+1] = min(dist[i][j][k], dist[i][k][k] + dist[k][j][k]);
+				dist[i][j][k] = min(dist[i][j][k], dist[i][k][k] + dist[k][j][k]);
 			}
 		}
 	}
@@ -23,11 +25,11 @@ int main() {
 	int n, m, a, b, c, t = 1;
 
 	while(scanf("%d %d", &n, &m) != EOF) {
+		memset(dist, INT_MAX, sizeof dist);
+
 		for (int x = 0; x < NODES; x++) 
 			for (int y = 0; y < NODES; y++) 
-				for (int z = 0; z < NODES; z++)
-					if (y == z) dist[y][z][x] = 0;
-					else dist[y][z][x] = INF;
+				dist[x][x][y] = 0;
 
 
 		while(m--) {
@@ -43,7 +45,7 @@ int main() {
 		while(m--) {
 			scanf("%d %d %d", &a, &b, &c);
 			
-			if (dist[a][b][c] == INF) printf("-1\n");
+			if (dist[a][b][c] == INT_MAX) printf("-1\n");
 			else printf("%d\n", dist[a][b][c]);
 		}
 
