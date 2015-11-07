@@ -45,9 +45,14 @@ char pd(int start, int end) {
 		for (int i = start; i < end; i++) {
 			tmp1 = pd(start, i);
 			tmp2 = pd(i+1, end);
-			tmp3 = gettempo(memo_char[start][i], memo_char[i+1][end]);
+			tmp3 = gettempo(tmp1, tmp2);
 
-			memo[start][end][getdest(memo_char[start][i], memo_char[i+1][end])]
+			memo[start][end][getdest(tmp1, tmp2)] = 
+				min(
+					memo[start][end][getdest(tmp1, tmp2)], 
+					memo[start][end][]
+
+					tmp1 + tmp2 + tmp3);
 
 			if (min_i >= tmp1 + tmp2 + tmp3) {
 				min_i = tmp1 + tmp2 + tmp3;
