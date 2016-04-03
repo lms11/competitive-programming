@@ -3,8 +3,7 @@
 #include <algorithm>
 using namespace std;
 
-int memo[35];
-vector<int> values;
+int memo[35][35];
 int n;
 
 int pd(int i) {
@@ -37,11 +36,7 @@ int main() {
 	int a;
 
 	while(scanf("%d", &n), n != 0) {
-		values.clear();
-
-		for (int x = 0; x < 35; x++) {
-			memo[x] = -1;
-		}
+		memset(memo, -1, sizeof(memo));
 
 		values.push_back(1);
 
